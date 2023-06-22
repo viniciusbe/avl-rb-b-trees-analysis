@@ -3,3 +3,4 @@
 #include <time.h>
 
 int *geraVetor(int n);
+void embaralha(int *array, int n);
