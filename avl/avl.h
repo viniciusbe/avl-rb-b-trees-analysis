@@ -1,29 +1,29 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct no {
-    struct no* pai;
-    struct no* esquerda;
-    struct no* direita;
+typedef struct noAVL {
+    struct noAVL* pai;
+    struct noAVL* esquerda;
+    struct noAVL* direita;
     int valor;
-} No;
+} NoAVL;
 
-typedef struct arvore {
-    struct no* raiz;
+typedef struct arvoreAVL {
+    struct noAVL* raiz;
 } ArvoreAVL;
 
 ArvoreAVL* criarArvoreAVL();
-No* adicionarValorAVL(ArvoreAVL* arvore, int valor);
+NoAVL* adicionarValorAVL(ArvoreAVL* arvore, int valor);
 void removerValorAVL(ArvoreAVL* arvore, int valor);
 
-No* criarNo(int valor);
-No* adicionarNo(No* no, int valor);
-void removerNo(ArvoreAVL* arvore, No* no);
-No* localizarValor(No* no, int valor);
-void balancear(ArvoreAVL*, No*);
-int altura(No*);
-int fb(No*);
-No* rse(ArvoreAVL*, No*);
-No* rsd(ArvoreAVL*, No*);
-No* rdd(ArvoreAVL*, No*);
-No* rde(ArvoreAVL*, No*);
+static NoAVL* criarNo(NoAVL* pai, int valor);
+static NoAVL* adicionarNo(NoAVL* no, int valor);
+static void removerNo(ArvoreAVL* arvore, NoAVL* no);
+static NoAVL* localizarValor(NoAVL* no, int valor);
+static void balancear(ArvoreAVL* arvore, NoAVL* no);
+static int altura(NoAVL* no);
+int fb(NoAVL* no);
+NoAVL* rse(ArvoreAVL* arvore, NoAVL* no);
+NoAVL* rsd(ArvoreAVL* arvore, NoAVL* no);
+NoAVL* rdd(ArvoreAVL* arvore, NoAVL* no);
+NoAVL* rde(ArvoreAVL* arvore, NoAVL* no);

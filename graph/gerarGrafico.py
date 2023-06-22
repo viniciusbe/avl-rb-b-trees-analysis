@@ -9,7 +9,7 @@ plt.rcParams["figure.dpi"] = 600
 plt.rcParams["lines.linewidth"] = 1
 
 # Make a list of columns
-headers = ['AVL']
+headers = ['AVL', 'RN']
 
 # Read a CSV file
 df = pd.read_csv("graph/adicao.csv", names=headers)
