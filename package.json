@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "gcc -o avl.o -c avl/avl.c & gcc -o rn.o -c rn/rn.c & gcc -o utils.o -c utils/utils.c & gcc -o main main.c avl.o rn.o utils.o & start main.exe",
-    "plot": "Python graph/gerarGrafico.py"
+    "start": "gcc -o avl.o -c avl/avl.c & gcc -o rn.o -c rn/rn.c & gcc -o b.o -c b/b.c & gcc -o utils.o -c utils/utils.c ; gcc -o main main.c avl.o rn.o b.o utils.o ; ./main",
+    "plot": "python graph/gerarGrafico.py"
   }
 }

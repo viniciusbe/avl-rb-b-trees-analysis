@@ -70,7 +70,6 @@ NoAVL* criarNo(NoAVL* pai, int valor) {
 NoAVL* adicionarNo(NoAVL* no, int valor) {
     contadorAVL++;
     if (valor > no->valor) {
-        contadorAVL++;
         if (no->direita == NULL) {
             NoAVL* novo = criarNo(no, valor);
             no->direita = novo;
@@ -80,7 +79,6 @@ NoAVL* adicionarNo(NoAVL* no, int valor) {
             return adicionarNo(no->direita, valor);
         }
     } else {
-        contadorAVL++;
         if (no->esquerda == NULL) {
             NoAVL* novo = criarNo(no, valor);
 			no->esquerda = novo;
@@ -95,14 +93,13 @@ NoAVL* adicionarNo(NoAVL* no, int valor) {
 
 
 void balancear(ArvoreAVL* a, NoAVL* no) {
-    contadorAVL++;
     while (no != NULL) {
+        contadorAVL++;
         int fator = fb(no);
 
-        contadorAVL += 2;
         if (fator > 1) { //arvore mais profunda a esquerda
             //rotacao a direita
-            contadorAVL++;
+            
             if (fb(no->esquerda) > 0) {
                 rsd(a, no);
             } else {
@@ -110,7 +107,7 @@ void balancear(ArvoreAVL* a, NoAVL* no) {
             }
         } else if (fator < -1) {
             //rotacao a esquerda
-            contadorAVL++;
+            
             if (fb(no->direita) < 0) {
                 rse(a, no);
             } else {
@@ -119,7 +116,6 @@ void balancear(ArvoreAVL* a, NoAVL* no) {
         }
 
         no = no->pai;
-        contadorAVL++;
     }
 }
 
@@ -150,29 +146,25 @@ NoAVL* localizarValor(NoAVL* no, int valor) {
 int altura(NoAVL* no){
     int esquerda = 0,direita = 0;
 
-    contadorAVL++;
     if (no->esquerda != NULL) {
         esquerda = altura(no->esquerda) + 1;
     }
 
-    contadorAVL++;
     if (no->direita != NULL) {
         direita = altura(no->direita) + 1;
     }
   
-    contadorAVL++;
     return esquerda > direita ? esquerda : direita; //max(esquerda,direita)
 }
 
 int fb(NoAVL* no) {
-    int esquerda = 0,direita = 0;
-  
     contadorAVL++;
+    int esquerda = 0,direita = 0;
+
     if (no->esquerda != NULL) {
         esquerda = altura(no->esquerda) + 1;
     }
 
-    contadorAVL++;
     if (no->direita != NULL) {
         direita = altura(no->direita) + 1;
     }
@@ -181,10 +173,10 @@ int fb(NoAVL* no) {
 }
 
 NoAVL* rse(ArvoreAVL* arvore, NoAVL* no) {
+    contadorAVL++;
     NoAVL* pai = no->pai;
     NoAVL* direita = no->direita;
 
-    contadorAVL++;
     if (direita->esquerda != NULL) {
         direita->esquerda->pai = no;
     } 
@@ -195,11 +187,9 @@ NoAVL* rse(ArvoreAVL* arvore, NoAVL* no) {
     direita->esquerda = no;
     direita->pai = pai;
 
-    contadorAVL++;
     if (pai == NULL) {
         arvore->raiz = direita;
     } else {
-        contadorAVL++;
         if (pai->esquerda == no) {
             pai->esquerda = direita;
         } else {
@@ -211,10 +201,10 @@ NoAVL* rse(ArvoreAVL* arvore, NoAVL* no) {
 }
 
 NoAVL* rsd(ArvoreAVL* arvore, NoAVL* no) {
+    contadorAVL++;
     NoAVL* pai = no->pai;
     NoAVL* esquerda = no->esquerda;
 
-    contadorAVL++;
     if (esquerda->direita != NULL) {
         esquerda->direita->pai = no;
     } 
@@ -225,11 +215,9 @@ NoAVL* rsd(ArvoreAVL* arvore, NoAVL* no) {
     esquerda->direita = no;
     esquerda->pai = pai;
 
-    contadorAVL++;
     if (pai == NULL) {
         arvore->raiz = esquerda;
     } else {
-        contadorAVL++;
         if (pai->esquerda == no) {
             pai->esquerda = esquerda;
         } else {
