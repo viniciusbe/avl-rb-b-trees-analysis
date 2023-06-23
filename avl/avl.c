@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "avl.h"
 
-unsigned long int contadorAVL = 0;
+long int contadorAVL = 0;
 
 ArvoreAVL* criarArvoreAVL() {
     ArvoreAVL *arvore = malloc(sizeof(ArvoreAVL));
@@ -11,17 +11,17 @@ ArvoreAVL* criarArvoreAVL() {
     return arvore;
 }
 
-NoAVL* adicionarValorAVL(ArvoreAVL* arvore, int valor) {
-    contadorAVL++;
+int adicionarValorAVL(ArvoreAVL* arvore, int valor) {
+    contadorAVL = 1;
     if (arvore->raiz == NULL) {
         NoAVL* novo = criarNo(NULL, valor);
         arvore->raiz = novo;
 			
-        return novo;
+        return contadorAVL;
     } else {
         NoAVL* no = adicionarNo(arvore->raiz, valor);
         balancear(arvore, no);
-        return no;
+        return contadorAVL;
     }
 }
 

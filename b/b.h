@@ -23,4 +23,4 @@ void adicionaChaveNo(NoB*, NoB*, int);
 int transbordo(ArvoreB*,NoB*);
 NoB* divideNo(ArvoreB*, NoB*);
 void adicionaChaveRecursivo(ArvoreB*, NoB*, NoB*, int);
-void adicionarValorB(ArvoreB*, int);
+int adicionarValorB(ArvoreB*, int);

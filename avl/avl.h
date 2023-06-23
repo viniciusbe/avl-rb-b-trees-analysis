@@ -13,7 +13,7 @@ typedef struct arvoreAVL {
 } ArvoreAVL;
 
 ArvoreAVL* criarArvoreAVL();
-NoAVL* adicionarValorAVL(ArvoreAVL* arvore, int valor);
+int adicionarValorAVL(ArvoreAVL* arvore, int valor);
 void removerValorAVL(ArvoreAVL* arvore, int valor);
 
 static NoAVL* criarNo(NoAVL* pai, int valor);

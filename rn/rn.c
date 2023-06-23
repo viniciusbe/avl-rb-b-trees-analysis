@@ -3,7 +3,7 @@
 #include <time.h>
 #include "rn.h"
 
-unsigned long int contadorRN = 0; 
+long int contadorRN = 0; 
 
 static NoRN* criarNo(ArvoreRN* arvore, NoRN* pai, int valor); 
 static NoRN* adicionarNo(ArvoreRN* arvore, NoRN* no, int valor);
@@ -54,17 +54,17 @@ NoRN* adicionarNo(ArvoreRN* arvore, NoRN* no, int valor) {
     } 
 } 
   
-NoRN* adicionarValorRN(ArvoreRN* arvore, int valor) { 
-    contadorRN++; 
+int adicionarValorRN(ArvoreRN* arvore, int valor) { 
+    contadorRN = 1; 
     if (arvore->raiz == NULL) { 
         arvore->raiz = criarNo(arvore, arvore->nulo, valor); 
         arvore->raiz->cor = Preto; 
          
-        return arvore->raiz; 
+        return contadorRN; 
     } else { 
         NoRN* no = adicionarNo(arvore, arvore->raiz, valor); 
         balancear(arvore, no); 
-        return no; 
+        return contadorRN; 
     } 
 } 
 

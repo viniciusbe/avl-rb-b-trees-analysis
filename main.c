@@ -12,19 +12,10 @@
 
 
 int main() {
-    extern unsigned long int contadorAVL;
-    extern unsigned long int contadorRN;
-    extern long int contadorB;
-    long int contadorB1;
-    long int contadorB5;
-    long int contadorB10;
-
     printf("Inicio\n");
 
-    FILE *arquivoAdicao;
-    FILE *arquivoRemocao;
-    arquivoAdicao = fopen("graph/adicao.csv", "w+");
-    arquivoRemocao = fopen("graph/remocao.csv", "w+");
+    FILE *arquivoAdicao = fopen("graph/adicao.csv", "w+");
+    FILE *arquivoRemocao = fopen("graph/remocao.csv", "w+");
 
     if(arquivoAdicao == NULL || arquivoRemocao == NULL) {
         printf("Erro ao abrir arquivo(s)");
@@ -33,12 +24,11 @@ int main() {
 
     for (int tamChaves = TAM_MIN; tamChaves <= TAM_MAX; tamChaves++)
     {
-        contadorAVL = 0;
-        contadorRN = 0;
-        contadorB = 0;
-
-        contadorB1 = 0;
-        contadorB5 = 0;
+        long int contadorAVL = 0;
+        long int contadorRN = 0;
+        long int contadorB1 = 0;
+        long int contadorB5 = 0;
+        long int contadorB10 = 0;
 
         for (size_t j = 0; j < REPETICOES; j++)
         {
@@ -52,21 +42,11 @@ int main() {
 
             for (size_t k = 0; k < tamChaves; k++)
             {
-                adicionarValorAVL(arvoreAVL, chaves[k]);
-                
-                
-                adicionarValorRN(arvoreRN, chaves[k]);
-                //B1
-
-                contadorB = 0;
-                adicionarValorB(arvoreB1, chaves[k]);
-                contadorB1 += contadorB;
-
-                contadorB = 0;
-                adicionarValorB(arvoreB5, chaves[k]);
-                contadorB5 += contadorB;
-
-
+                contadorAVL += adicionarValorAVL(arvoreAVL, chaves[k]);
+                contadorRN += adicionarValorRN(arvoreRN, chaves[k]);
+                contadorB1 += adicionarValorB(arvoreB1, chaves[k]);
+                contadorB5 += adicionarValorB(arvoreB5, chaves[k]);
+                contadorB10 += adicionarValorB(arvoreB10, chaves[k]);
             }
 
             free(arvoreAVL);
@@ -77,9 +57,15 @@ int main() {
             free(chaves);
         }
 
-        // Adição
-
-        fprintf(arquivoAdicao, "%d, %lu, %ld, %ld, %ld \n", tamChaves, contadorAVL / REPETICOES, contadorRN / REPETICOES, contadorB1 / REPETICOES, contadorB5 / REPETICOES);
+        fprintf(arquivoAdicao, 
+            "%d, %ld, %ld, %ld, %ld, %ld \n", 
+            tamChaves, 
+            contadorAVL / REPETICOES, 
+            contadorRN / REPETICOES, 
+            contadorB1 / REPETICOES, 
+            contadorB5 / REPETICOES, 
+            contadorB10 / REPETICOES
+        );
 
         //  Remoção
 

@@ -117,7 +117,7 @@ NoB* divideNo(ArvoreB* arvore, NoB* no) {
     novo->pai = no->pai;
 
     contadorB++;
-    
+
     for (int i = meio + 1; i < no->total; i++) {
         novo->filhos[novo->total] = no->filhos[i];
         novo->chaves[novo->total] = no->chaves[i];
@@ -141,8 +141,9 @@ void adicionaChaveRecursivo(ArvoreB* arvore, NoB* no, NoB* novo, int valor) {
         int promovido = no->chaves[arvore->ordem]; 
         NoB* novo = divideNo(arvore, no);
 
+        contadorB++;
+        
         if (no->pai == NULL) {
-            
             NoB* pai = criaNo(arvore);            
             pai->filhos[0] = no;
             adicionaChaveNo(pai, novo, promovido);
@@ -155,27 +156,13 @@ void adicionaChaveRecursivo(ArvoreB* arvore, NoB* no, NoB* novo, int valor) {
     }
 }
 
-void adicionarValorB(ArvoreB* arvore, int valor) {
+int adicionarValorB(ArvoreB* arvore, int valor) {
+    contadorB = 1;
     NoB* no = localizaNo(arvore, valor);
 
     adicionaChaveRecursivo(arvore, no, NULL, valor);
+
+    return contadorB;
 }
 
-// int main() {
-//     ArvoreB* arvore = criarArvoreB(1);
-    
-//     contadorB = 0;
 
-//     adicionarValorB(arvore, 12);
-//     adicionarValorB(arvore, 3);
-//     adicionarValorB(arvore, 5);
-//     adicionarValorB(arvore, 7);
-//     adicionarValorB(arvore, 15);
-//     adicionarValorB(arvore, 99);
-//     adicionarValorB(arvore, 1);
-
-//     percorreArvore(arvore->raiz);
-
-//     printf("\nNúmero de operações: %d\n", contadorB);
-
-// }
