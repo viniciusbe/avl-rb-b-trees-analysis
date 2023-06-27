@@ -4,3 +4,4 @@
 
 int *geraVetor(int n);
 void embaralha(int *array, int n);
+void imprimirArvoreAVL(NoAVL* raiz, int nivel);
