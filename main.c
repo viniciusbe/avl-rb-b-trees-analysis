@@ -7,8 +7,8 @@
 #include "utils/utils.h"
 
 #define REPETICOES 10
-#define TAM_MIN 1 
-#define TAM_MAX 1000
+#define TAM_MIN 1
+#define TAM_MAX 10
 
 
 int main() {
@@ -22,13 +22,18 @@ int main() {
         return 0;
     }
 
+    srand(time(NULL));
+
     for (int tamChaves = TAM_MIN; tamChaves <= TAM_MAX; tamChaves++)
     {
+        printf("\n************* TAM %d **************\n", tamChaves);
         long int contadorAVL = 0;
         long int contadorRN = 0;
         long int contadorB1 = 0;
         long int contadorB5 = 0;
         long int contadorB10 = 0;
+
+        long int contadorRemocaoAVL = 0;
 
         for (size_t j = 0; j < REPETICOES; j++)
         {
@@ -42,6 +47,7 @@ int main() {
 
             for (size_t k = 0; k < tamChaves; k++)
             {
+                printf("\nAdicionando:%d", chaves[k]);
                 contadorAVL += adicionarValorAVL(arvoreAVL, chaves[k]);
                 contadorRN += adicionarValorRN(arvoreRN, chaves[k]);
                 contadorB1 += adicionarValorB(arvoreB1, chaves[k]);
@@ -49,6 +55,15 @@ int main() {
                 contadorB10 += adicionarValorB(arvoreB10, chaves[k]);
             }
 
+            for (size_t i = tamChaves; i > 0; i--)
+            {
+                int indice = rand() % i;
+                int valor = chaves[indice];
+                contadorRemocaoAVL += removerValorAVL(arvoreAVL, valor);
+                chaves[indice] = chaves[i - 1];
+                imprimirArvoreAVL(arvoreAVL->raiz,0);
+            }
+            
             free(arvoreAVL);
             free(arvoreRN);
             free(arvoreB1);
@@ -67,18 +82,21 @@ int main() {
             contadorB10 / REPETICOES
         );
 
-        //  Remoção
-
-        // Gerar numero aleatorio para remover
+        fprintf(arquivoRemocao, 
+            "%d, %ld \n", 
+            tamChaves, 
+            contadorRemocaoAVL / REPETICOES
+        );
 
         fflush(arquivoAdicao);
+        fflush(arquivoRemocao);
     }
     
     fclose(arquivoAdicao);
     fclose(arquivoRemocao);
 
-    printf("Fim\n");
-
+    printf("\nFim\n");
+    system("pause");
 
     return 1;
 }
