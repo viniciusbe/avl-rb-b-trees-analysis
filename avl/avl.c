@@ -11,7 +11,7 @@ ArvoreAVL* criarArvoreAVL() {
     return arvore;
 }
 
-int adicionarValorAVL(ArvoreAVL* arvore, int valor) {
+long int adicionarValorAVL(ArvoreAVL* arvore, int valor) {
     contadorAVL = 1;
     if (arvore->raiz == NULL) {
         NoAVL* novo = criarNo(NULL, valor);
@@ -20,42 +20,65 @@ int adicionarValorAVL(ArvoreAVL* arvore, int valor) {
         return contadorAVL;
     } else {
         NoAVL* no = adicionarNo(arvore->raiz, valor);
-        balancear(arvore, no);
+        balancearAdicao(arvore, no);
         return contadorAVL;
     }
 }
 
-void removerValorAVL(ArvoreAVL* arvore, int valor) {
-    NoAVL* no = localizarValor(arvore->raiz, valor);
-    contadorAVL++;
-    if(no == NULL) return;
-    removerNo(arvore, no);
+NoAVL* encontrarMinimoAVL(NoAVL* no) {
+    if (no->esquerda == NULL) {
+        return no;
+    }
+
+    return encontrarMinimoAVL(no->esquerda);
 }
 
-void removerNo(ArvoreAVL* arvore, NoAVL* no) {
-    contadorAVL++;
-    if (no->esquerda != NULL) {
-        removerNo(arvore, no->esquerda);
-    }
+long int removerValorAVL(ArvoreAVL* arvore, int valor) {
+    contadorAVL = 0;
+    if(arvore->raiz == NULL) printf("\nRaiz nula");
+    printf("\nRemovendo Valor %d\n",valor);
+    arvore->raiz = removerNo(arvore, arvore->raiz, valor);
+    
+    return contadorAVL;
+}
 
+NoAVL* removerNo(ArvoreAVL* arvore, NoAVL* raiz, int chave) {
     contadorAVL++;
-    if (no->direita != NULL) {
-        removerNo(arvore, no->direita);
-    }
 
-    contadorAVL++;
-    if (no->pai == NULL) {
-        arvore->raiz = NULL;
+    if(raiz == NULL) return raiz;
+
+    if(chave < raiz->valor) {
+        raiz->esquerda = removerNo(arvore, raiz->esquerda, chave);
+    } else if (chave > raiz->valor) {
+        raiz->direita = removerNo(arvore, raiz->direita, chave);
     } else {
-        contadorAVL++;
-        if (no->pai->esquerda == no) {
-            no->pai->esquerda = NULL;
-        } else {
-            no->pai->direita = NULL;
+        if (raiz->esquerda == NULL) {
+            NoAVL* temp = raiz->direita;
+            if(temp != NULL) {
+                temp->pai = raiz->pai;
+            }
+            free(raiz);
+            return temp;
         }
+        else if (raiz->direita == NULL) {
+            NoAVL* temp = raiz->esquerda;
+            if(temp != NULL) {
+                temp->pai = raiz->pai;
+            }
+            free(raiz);
+            return temp;
+        }
+        NoAVL* temp = encontrarMinimoAVL(raiz->direita);
+        raiz->valor = temp->valor;
+        raiz->direita = removerNo(arvore, raiz->direita, temp->valor);
+    }
+    
+    NoAVL* noBalanceado = balancear(arvore, raiz);
+    if(noBalanceado != NULL) {
+        return noBalanceado;
     }
 
-    free(no);
+    return raiz;
 }
 
 NoAVL* criarNo(NoAVL* pai, int valor) {
@@ -90,24 +113,18 @@ NoAVL* adicionarNo(NoAVL* no, int valor) {
     }
 }
 
-
-
-void balancear(ArvoreAVL* a, NoAVL* no) {
+void balancearAdicao(ArvoreAVL* a, NoAVL* no) {
     while (no != NULL) {
         contadorAVL++;
         int fator = fb(no);
 
         if (fator > 1) { //arvore mais profunda a esquerda
-            //rotacao a direita
-            
             if (fb(no->esquerda) > 0) {
                 rsd(a, no);
             } else {
                 rdd(a, no);
             }
         } else if (fator < -1) {
-            //rotacao a esquerda
-            
             if (fb(no->direita) < 0) {
                 rse(a, no);
             } else {
@@ -119,29 +136,26 @@ void balancear(ArvoreAVL* a, NoAVL* no) {
     }
 }
 
-NoAVL* localizarValor(NoAVL* no, int valor) {
+NoAVL* balancear(ArvoreAVL* a, NoAVL* no) {
     contadorAVL++;
-    if (no->valor == valor) {
-        return no;
-    } else {
-        contadorAVL++;
-        if (valor < no->valor) {
-            contadorAVL++;
-            if (no->esquerda != NULL) {
-                return localizarValor(no->esquerda, valor);
-            }
+    int fator = fb(no);
+
+    if (fator > 1) { //arvore mais profunda a esquerda
+        if (fb(no->esquerda) > 0) {
+            return rsd(a, no);
         } else {
-            contadorAVL++;
-            if (no->direita != NULL) {
-                return localizarValor(no->direita, valor);
-            }
+            return rdd(a, no);
+        }
+    } else if (fator < -1) {
+        if (fb(no->direita) < 0) {
+            return rse(a, no);
+        } else {
+            return rde(a, no);
         }
     }
 
     return NULL;
 }
-
-
 
 int altura(NoAVL* no){
     int esquerda = 0,direita = 0;
@@ -177,6 +191,8 @@ NoAVL* rse(ArvoreAVL* arvore, NoAVL* no) {
     NoAVL* pai = no->pai;
     NoAVL* direita = no->direita;
 
+    printf("\nRot a esquerda: %d\n",no->valor);
+
     if (direita->esquerda != NULL) {
         direita->esquerda->pai = no;
     } 
@@ -204,6 +220,8 @@ NoAVL* rsd(ArvoreAVL* arvore, NoAVL* no) {
     contadorAVL++;
     NoAVL* pai = no->pai;
     NoAVL* esquerda = no->esquerda;
+
+    printf("\nRot a direita: %d\n",no->valor);
 
     if (esquerda->direita != NULL) {
         esquerda->direita->pai = no;

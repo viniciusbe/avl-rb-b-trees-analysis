@@ -13,14 +13,15 @@ typedef struct arvoreAVL {
 } ArvoreAVL;
 
 ArvoreAVL* criarArvoreAVL();
-int adicionarValorAVL(ArvoreAVL* arvore, int valor);
-void removerValorAVL(ArvoreAVL* arvore, int valor);
+long int adicionarValorAVL(ArvoreAVL* arvore, int valor);
+long int removerValorAVL(ArvoreAVL* arvore, int valor);
 
 static NoAVL* criarNo(NoAVL* pai, int valor);
 static NoAVL* adicionarNo(NoAVL* no, int valor);
-static void removerNo(ArvoreAVL* arvore, NoAVL* no);
-static NoAVL* localizarValor(NoAVL* no, int valor);
-static void balancear(ArvoreAVL* arvore, NoAVL* no);
+static NoAVL* removerNo(ArvoreAVL* arvore, NoAVL* raiz, int chave);
+NoAVL* encontrarMinimoAVL(NoAVL* no);
+static void balancearAdicao(ArvoreAVL* arvore, NoAVL* no);
+static NoAVL* balancear(ArvoreAVL* arvore, NoAVL* no);
 static int altura(NoAVL* no);
 int fb(NoAVL* no);
 NoAVL* rse(ArvoreAVL* arvore, NoAVL* no);
