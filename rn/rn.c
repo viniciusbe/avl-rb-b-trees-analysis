@@ -7,7 +7,7 @@ long int contadorRN = 0;
 
 static NoRN* criarNo(ArvoreRN* arvore, NoRN* pai, int valor); 
 static NoRN* adicionarNo(ArvoreRN* arvore, NoRN* no, int valor);
-static void balancear(ArvoreRN* arvore, NoRN* no); 
+static void balancearAdicao(ArvoreRN* arvore, NoRN* no); 
 static void rotacionarEsquerda(ArvoreRN* arvore, NoRN* no); 
 static void rotacionarDireita(ArvoreRN* arvore, NoRN* no);
 static void transplantar(ArvoreRN* arvore, NoRN* atual, NoRN* novo);
@@ -92,7 +92,7 @@ long int adicionarValorRN(ArvoreRN* arvore, int valor) {
         return contadorRN; 
     } else { 
         NoRN* no = adicionarNo(arvore, arvore->raiz, valor); 
-        balancear(arvore, no); 
+        balancearAdicao(arvore, no); 
         return contadorRN; 
     } 
 } 
@@ -161,7 +161,7 @@ NoRN* encontrarMinimoRN(NoRN* no, NoRN* nulo) {
     return no;
 }
 
-void balancear(ArvoreRN* arvore, NoRN* no) { 
+void balancearAdicao(ArvoreRN* arvore, NoRN* no) { 
     while (no->pai->cor == Vermelho) { 
         contadorRN++; 
         if (no->pai == no->pai->pai->esquerda) { 
@@ -210,56 +210,56 @@ void balancearRemocao(ArvoreRN* arvore, NoRN* no) {
     while (no != arvore->raiz && no->cor == Preto) {
         contadorRN++;
         if (no == no->pai->esquerda) {
-            NoRN* w = no->pai->direita;
+            NoRN* irmao = no->pai->direita;
             
-            if (w->cor == Vermelho) {
-                w->cor = Preto;
+            if (irmao->cor == Vermelho) {
+                irmao->cor = Preto;
                 no->pai->cor = Vermelho;
                 rotacionarEsquerda(arvore, no->pai);
-                w = no->pai->direita;
+                irmao = no->pai->direita;
             }
             
-            if (w->esquerda->cor == Preto && w->direita->cor == Preto) {
-                w->cor = Vermelho;
+            if (irmao->esquerda->cor == Preto && irmao->direita->cor == Preto) {
+                irmao->cor = Vermelho;
                 no = no->pai;
             } else {
-                if (w->direita->cor == Preto) {
-                    w->esquerda->cor = Preto;
-                    w->cor = Vermelho;
-                    rotacionarDireita(arvore, w);
-                    w = no->pai->direita;
+                if (irmao->direita->cor == Preto) {
+                    irmao->esquerda->cor = Preto;
+                    irmao->cor = Vermelho;
+                    rotacionarDireita(arvore, irmao);
+                    irmao = no->pai->direita;
                 }
                 
-                w->cor = no->pai->cor;
+                irmao->cor = no->pai->cor;
                 no->pai->cor = Preto;
-                w->direita->cor = Preto;
+                irmao->direita->cor = Preto;
                 rotacionarEsquerda(arvore, no->pai);
                 no = arvore->raiz;
             }
         } else {
-            NoRN* w = no->pai->esquerda;
+            NoRN* irmao = no->pai->esquerda;
             
-            if (w->cor == Vermelho) {
-                w->cor = Preto;
+            if (irmao->cor == Vermelho) {
+                irmao->cor = Preto;
                 no->pai->cor = Vermelho;
                 rotacionarDireita(arvore, no->pai);
-                w = no->pai->esquerda;
+                irmao = no->pai->esquerda;
             }
             
-            if (w->direita->cor == Preto && w->esquerda->cor == Preto) {
-                w->cor = Vermelho;
+            if (irmao->direita->cor == Preto && irmao->esquerda->cor == Preto) {
+                irmao->cor = Vermelho;
                 no = no->pai;
             } else {
-                if (w->esquerda->cor == Preto) {
-                    w->direita->cor = Preto;
-                    w->cor = Vermelho;
-                    rotacionarEsquerda(arvore, w);
-                    w = no->pai->esquerda;
+                if (irmao->esquerda->cor == Preto) {
+                    irmao->direita->cor = Preto;
+                    irmao->cor = Vermelho;
+                    rotacionarEsquerda(arvore, irmao);
+                    irmao = no->pai->esquerda;
                 }
                 
-                w->cor = no->pai->cor;
+                irmao->cor = no->pai->cor;
                 no->pai->cor = Preto;
-                w->esquerda->cor = Preto;
+                irmao->esquerda->cor = Preto;
                 rotacionarDireita(arvore, no->pai);
                 no = arvore->raiz;
             }

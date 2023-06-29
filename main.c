@@ -6,11 +6,9 @@
 #include "b/b.h"
 #include "utils/utils.h"
 
-#define REPETICOES 1
-#define TAM_MIN 10
-#define TAM_MAX 10
-
-void imprimirArvore(NoB* no, int nivel);
+#define REPETICOES 10
+#define TAM_MIN 1
+#define TAM_MAX 2000
 
 int main() {
     printf("Inicio\n");
@@ -51,7 +49,6 @@ int main() {
 
             for (size_t k = 0; k < tamChaves; k++)
             {
-                printf("\nAdicionando:%d", chaves[k]);
                 contadorAVL += adicionarValorAVL(arvoreAVL, chaves[k]);
                 contadorRN += adicionarValorRN(arvoreRN, chaves[k]);
                 contadorB1 += adicionarValorB(arvoreB1, chaves[k]);
@@ -61,14 +58,13 @@ int main() {
 
             for (size_t i = tamChaves; i > 0; i--)
             {
-                printf("\n");
-                imprimirArvore(arvoreB1->raiz, 0);
-
                 int indice = rand() % i;
                 int valor = chaves[indice];
                 contadorRemocaoAVL += removerValorAVL(arvoreAVL, valor);
                 contadorRemocaoRN += removerValorRN(arvoreRN, valor);
                 contadorRemocaoB1 += removerValorB(arvoreB1, valor);
+                contadorRemocaoB5 += removerValorB(arvoreB5, valor);
+                contadorRemocaoB10 += removerValorB(arvoreB10, valor);
                 chaves[indice] = chaves[i - 1];
             }
             
@@ -91,11 +87,13 @@ int main() {
         );
 
         fprintf(arquivoRemocao, 
-            "%d, %ld, %ld, %ld \n", 
+            "%d, %ld, %ld, %ld, %ld, %ld \n", 
             tamChaves, 
             contadorRemocaoAVL / REPETICOES,
             contadorRemocaoRN / REPETICOES,
-            contadorRemocaoB1 / REPETICOES
+            contadorRemocaoB1 / REPETICOES,
+            contadorRemocaoB5 / REPETICOES,
+            contadorRemocaoB10 / REPETICOES
         );
 
         fflush(arquivoAdicao);
@@ -109,23 +107,4 @@ int main() {
     system("pause");
 
     return 1;
-}
-
-void imprimirArvore(NoB* no, int nivel) {
-    if (no != NULL) {
-        int i;
-
-        for (i = 0; i < no->total; i++) {
-            // Imprimir a chave com indentação de acordo com o nível
-            for (int j = 0; j < nivel; j++) {
-                printf("\t");
-            }
-            printf("%d\n", no->chaves[i]);
-        }
-
-        // Imprimir os filhos recursivamente, incrementando o nível
-        for (i = 0; i <= no->total; i++) {
-            imprimirArvore(no->filhos[i], nivel + 1);
-        }
-    }
 }

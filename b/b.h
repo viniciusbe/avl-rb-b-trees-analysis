@@ -22,4 +22,4 @@ int transbordo(ArvoreB*,NoB*);
 NoB* divideNo(ArvoreB*, NoB*);
 void adicionaChaveRecursivo(ArvoreB*, NoB*, NoB*, int);
 int adicionarValorB(ArvoreB*, int);
-int removerValorB(ArvoreB*, int);
+long int removerValorB(ArvoreB*, int);
