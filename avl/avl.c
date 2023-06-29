@@ -35,8 +35,6 @@ NoAVL* encontrarMinimoAVL(NoAVL* no) {
 
 long int removerValorAVL(ArvoreAVL* arvore, int valor) {
     contadorAVL = 0;
-    if(arvore->raiz == NULL) printf("\nRaiz nula");
-    printf("\nRemovendo Valor %d\n",valor);
     arvore->raiz = removerNo(arvore, arvore->raiz, valor);
     
     return contadorAVL;
@@ -191,7 +189,6 @@ NoAVL* rse(ArvoreAVL* arvore, NoAVL* no) {
     NoAVL* pai = no->pai;
     NoAVL* direita = no->direita;
 
-    printf("\nRot a esquerda: %d\n",no->valor);
 
     if (direita->esquerda != NULL) {
         direita->esquerda->pai = no;
@@ -221,7 +218,6 @@ NoAVL* rsd(ArvoreAVL* arvore, NoAVL* no) {
     NoAVL* pai = no->pai;
     NoAVL* esquerda = no->esquerda;
 
-    printf("\nRot a direita: %d\n",no->valor);
 
     if (esquerda->direita != NULL) {
         esquerda->direita->pai = no;

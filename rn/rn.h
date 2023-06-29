@@ -16,4 +16,6 @@ typedef struct arvoreRN {
 
 
 ArvoreRN* criarArvoreRN(); 
-int adicionarValorRN(ArvoreRN* arvore, int valor);
+void removerNoRN(ArvoreRN* arvore, NoRN* no);
+long int removerValorRN(ArvoreRN* arvore, int valor);
+long int adicionarValorRN(ArvoreRN* arvore, int valor);

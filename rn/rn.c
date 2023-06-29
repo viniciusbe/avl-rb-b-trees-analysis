@@ -9,7 +9,11 @@ static NoRN* criarNo(ArvoreRN* arvore, NoRN* pai, int valor);
 static NoRN* adicionarNo(ArvoreRN* arvore, NoRN* no, int valor);
 static void balancear(ArvoreRN* arvore, NoRN* no); 
 static void rotacionarEsquerda(ArvoreRN* arvore, NoRN* no); 
-static void rotacionarDireita(ArvoreRN* arvore, NoRN* no); 
+static void rotacionarDireita(ArvoreRN* arvore, NoRN* no);
+static void transplantar(ArvoreRN* arvore, NoRN* atual, NoRN* novo);
+static NoRN* encontrarMinimoRN(NoRN* no, NoRN* nulo);
+static NoRN* localizar(ArvoreRN* arvore, int valor);
+static void balancearRemocao(ArvoreRN* arvore, NoRN* no);
 
 ArvoreRN* criarArvoreRN() { 
     ArvoreRN *arvore = malloc(sizeof(ArvoreRN)); 
@@ -53,8 +57,33 @@ NoRN* adicionarNo(ArvoreRN* arvore, NoRN* no, int valor) {
         } 
     } 
 } 
+
+long int removerValorRN(ArvoreRN* arvore, int valor) {
+    contadorRN = 0;
+    NoRN* no = localizar(arvore, valor);
+    removerNoRN(arvore, no);
+
+    return contadorRN;
+}
+
+NoRN* localizar(ArvoreRN* arvore, int valor) {
+    if (arvore->raiz != NULL) {
+        NoRN* no = arvore->raiz;
+
+        while (no != arvore->nulo) {
+            contadorRN++;
+            if (no->valor == valor) {
+                return no;
+            } else {
+                no = valor < no->valor ? no->esquerda : no->direita;
+            }
+        }
+    }
+
+    return NULL;
+}
   
-int adicionarValorRN(ArvoreRN* arvore, int valor) { 
+long int adicionarValorRN(ArvoreRN* arvore, int valor) { 
     contadorRN = 1; 
     if (arvore->raiz == NULL) { 
         arvore->raiz = criarNo(arvore, arvore->nulo, valor); 
@@ -68,6 +97,70 @@ int adicionarValorRN(ArvoreRN* arvore, int valor) {
     } 
 } 
 
+void removerNoRN(ArvoreRN* arvore, NoRN* no) {
+    if (arvore == NULL || arvore->raiz == NULL || no == NULL) {
+        return;
+    }
+    contadorRN++;
+
+    NoRN* y = no;
+    NoRN* x;
+    Cor corOriginalY = y->cor;
+
+    if (no->esquerda == arvore->nulo) {
+        x = no->direita;
+        transplantar(arvore, no, no->direita);
+    } else if (no->direita == arvore->nulo) {
+        x = no->esquerda;
+        transplantar(arvore, no, no->esquerda);
+    } else {
+        y = encontrarMinimoRN(no->direita, arvore->nulo);
+        corOriginalY = y->cor;
+        x = y->direita;
+
+          if (y->pai == no) {
+            x->pai = y;
+        } else { 
+            transplantar(arvore, y, y->direita);
+            y->direita = no->direita;
+            y->direita->pai = y;
+        }
+
+        transplantar(arvore, no, y);
+        y->esquerda = no->esquerda;
+        y->esquerda->pai = y;
+        y->cor = no->cor;
+    }
+
+    if (corOriginalY == Preto) {
+        balancearRemocao(arvore, x);
+    }
+
+    free(no);
+}
+
+void transplantar(ArvoreRN* arvore, NoRN* atual, NoRN* novo) {
+    contadorRN++;
+
+    if (atual->pai == arvore->nulo) {
+        arvore->raiz = novo;
+    } else if (atual == atual->pai->esquerda) {
+        atual->pai->esquerda = novo;
+    } else {
+        atual->pai->direita = novo;
+    }
+    
+    novo->pai = atual->pai;
+}
+
+NoRN* encontrarMinimoRN(NoRN* no, NoRN* nulo) {
+    while (no->esquerda != nulo) {
+        contadorRN++;
+        no = no->esquerda;
+    }
+    return no;
+}
+
 void balancear(ArvoreRN* arvore, NoRN* no) { 
     while (no->pai->cor == Vermelho) { 
         contadorRN++; 
@@ -80,9 +173,8 @@ void balancear(ArvoreRN* arvore, NoRN* no) {
                 no->pai->pai->cor = Vermelho; //Caso 1 
                 no = no->pai->pai; //Caso 1 
             } else { 
-                contadorRN++;
                 if (no == no->pai->direita) {
-                    no = no->pai; //Caso 2 
+                    no = no->pai; //Caso 2
                     rotacionarEsquerda(arvore, no); //Caso 2 
                 } else { 
                     no->pai->cor = Preto;  
@@ -99,7 +191,6 @@ void balancear(ArvoreRN* arvore, NoRN* no) {
                 no->pai->pai->cor = Vermelho; //Caso 1 
                 no = no->pai->pai; //Caso 1 
             } else { 
-                contadorRN++;
                 if (no == no->pai->esquerda) {
                     no = no->pai; //Caso 2 
                     rotacionarDireita(arvore, no); //Caso 2 
@@ -115,7 +206,71 @@ void balancear(ArvoreRN* arvore, NoRN* no) {
     arvore->raiz->cor = Preto; // Conserta possível quebra regra 2 
 } 
 
+void balancearRemocao(ArvoreRN* arvore, NoRN* no) {
+    while (no != arvore->raiz && no->cor == Preto) {
+        contadorRN++;
+        if (no == no->pai->esquerda) {
+            NoRN* w = no->pai->direita;
+            
+            if (w->cor == Vermelho) {
+                w->cor = Preto;
+                no->pai->cor = Vermelho;
+                rotacionarEsquerda(arvore, no->pai);
+                w = no->pai->direita;
+            }
+            
+            if (w->esquerda->cor == Preto && w->direita->cor == Preto) {
+                w->cor = Vermelho;
+                no = no->pai;
+            } else {
+                if (w->direita->cor == Preto) {
+                    w->esquerda->cor = Preto;
+                    w->cor = Vermelho;
+                    rotacionarDireita(arvore, w);
+                    w = no->pai->direita;
+                }
+                
+                w->cor = no->pai->cor;
+                no->pai->cor = Preto;
+                w->direita->cor = Preto;
+                rotacionarEsquerda(arvore, no->pai);
+                no = arvore->raiz;
+            }
+        } else {
+            NoRN* w = no->pai->esquerda;
+            
+            if (w->cor == Vermelho) {
+                w->cor = Preto;
+                no->pai->cor = Vermelho;
+                rotacionarDireita(arvore, no->pai);
+                w = no->pai->esquerda;
+            }
+            
+            if (w->direita->cor == Preto && w->esquerda->cor == Preto) {
+                w->cor = Vermelho;
+                no = no->pai;
+            } else {
+                if (w->esquerda->cor == Preto) {
+                    w->direita->cor = Preto;
+                    w->cor = Vermelho;
+                    rotacionarEsquerda(arvore, w);
+                    w = no->pai->esquerda;
+                }
+                
+                w->cor = no->pai->cor;
+                no->pai->cor = Preto;
+                w->esquerda->cor = Preto;
+                rotacionarDireita(arvore, no->pai);
+                no = arvore->raiz;
+            }
+        }
+    }
+    
+    no->cor = Preto;
+}
+
 void rotacionarEsquerda(ArvoreRN* arvore, NoRN* no) { 
+    contadorRN++;
     NoRN* direita = no->direita; 
     no->direita = direita->esquerda;  
     
@@ -136,12 +291,14 @@ void rotacionarEsquerda(ArvoreRN* arvore, NoRN* no) {
 } 
 
 void rotacionarDireita(ArvoreRN* arvore, NoRN* no) { 
+    contadorRN++;
     NoRN* esquerda = no->esquerda; 
     no->esquerda = esquerda->direita; 
 
     if (esquerda->direita != arvore->nulo) { 
         esquerda->direita->pai = no; 
     } 
+
     esquerda->pai = no->pai; 
 
     if (no->pai == arvore->nulo) { 

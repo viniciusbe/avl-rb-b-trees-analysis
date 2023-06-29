@@ -15,12 +15,11 @@ typedef struct arvoreB {
 
 ArvoreB* criarArvoreB(int);
 NoB* criaNo(ArvoreB*);
-void percorreArvore(NoB*);
 int pesquisaBinaria(NoB*, int);
-int localizaValor(ArvoreB*, int);
 NoB* localizaNo(ArvoreB*, int);
 void adicionaChaveNo(NoB*, NoB*, int);
 int transbordo(ArvoreB*,NoB*);
 NoB* divideNo(ArvoreB*, NoB*);
 void adicionaChaveRecursivo(ArvoreB*, NoB*, NoB*, int);
 int adicionarValorB(ArvoreB*, int);
+int removerValorB(ArvoreB*, int);

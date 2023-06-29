@@ -1,5 +1,4 @@
 #include "utils.h"
-#include "../avl/avl.h"
 
 void embaralha(int *array, int n) {
     if (n > 1) {
@@ -24,18 +23,4 @@ int *geraVetor(int n) {
     embaralha(vetor, n);
 
     return vetor;
-}
-
-void imprimirArvoreAVL(NoAVL* raiz, int nivel) {
-    if (raiz == NULL) {
-        return;
-    }
-    int i;
-    for (i = 0; i < nivel; i++) {
-        printf("   ");
-    }
-    printf("|--%d\n", raiz->valor);
-    
-    imprimirArvoreAVL(raiz->esquerda, nivel + 1);
-    imprimirArvoreAVL(raiz->direita, nivel + 1);
 }
